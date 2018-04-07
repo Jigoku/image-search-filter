@@ -32,7 +32,7 @@ for (const item of document.querySelectorAll('div.rg_bx')) {
 
 //hide spam results matching this regex
 function hidespam(node) {
-	if (/(.)?(pinterest\.(com|co\.uk)|pinimg\.com|)/i.test(node.textContent)) {
+	if (/(.)?(pinterest\.(com|co\.uk)|pinimg\.com)/i.test(node.textContent)) {
 		//console.log(node.textContent);
 		node.style.height = '0px';
 		node.style.width = '0px';
