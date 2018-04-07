@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2018 Ricky K. Thomson
  *
@@ -33,15 +32,13 @@ for (const item of document.querySelectorAll('div.rg_bx')) {
 
 //hide spam results matching this regex
 function hidespam(node) {
-	if (!node.hasAttribute("spam")) {
-		if (/(.)?(pinterest\.(com|co\.uk)|pinimg\.com)/i.test(node.textContent)) {
-			console.log(node.textContent);
-			node.style.height = '0px';
-			node.style.width = '0px';
-			node.setAttribute("spam", true)
-			total = total +1;
-			console.log(total+ " spam results removed");
-		}
+	if (/(.)?(pinterest\.(com|co\.uk)|pinimg\.com|)/i.test(node.textContent)) {
+		//console.log(node.textContent);
+		node.style.height = '0px';
+		node.style.width = '0px';
+		node.textContent = "";
+		total = total +1;
+		console.log(total+ " spam results removed");
 	}
 }
 
