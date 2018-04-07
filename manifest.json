@@ -1,0 +1,30 @@
+{
+	"manifest_version": 2,
+	"name": "Image Search Filter",
+	"version": "1.0",
+
+	"description": "Hides results hosted on spam websites from Google's image search",
+	"homepage_url": "https://github.com/Jigoku/image-search-filter",
+	"permissions": [
+		"activeTab",
+		"https://www.google.co.uk/search*&tbm=isch*",
+  	],
+
+	"browser_action": {
+		"default_icon": "icons/border-48.png",
+		"default_title": "Image Search Filter",
+		"default_popup": "popup/main.html"
+	},
+
+	"icons": {
+		"48": "icons/border-48.png"
+	},
+
+	"content_scripts": [
+		{
+			"matches": ["https://www.google.co.uk/search*&tbm=isch*"],
+			"js": ["filter.js"]
+		}
+	]
+
+}
