@@ -12,8 +12,8 @@
  * u should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-    Image Search Filter
-	remove spam sites from the google image search results
+    Image Search Filter for Firefox Quantum.
+	Remove spam sites from the google image search results
 
 	By Ricky K. Thomson (Jigoku)
 	https://github.com/Jigoku/image-search-filter
@@ -23,7 +23,6 @@
 */
 
 var total = 0;
-
 
 // Callback function to execute when mutations are observed
 var observer = new MutationObserver(function(mutations) {
@@ -48,18 +47,22 @@ for (const item of document.querySelectorAll('div.rg_bx')) {
 }
 
 
+
 function hidespam(item) {
 	// hide spam from results
 
-	if (!(/spam/.test(item.className))) {
-		//console.log("found spam! " + total);
+	// check if className matches with "isf-filtered"
+	if (!(/isf-filtered/.test(item.className))) {
+
+		// check for matching spam sites
 		if (/(.)?(pinterest\.(com|co\.uk)|pinimg\.com)/i.test(item.textContent)) {
 
-			// tag matches, so we only count them once
-			item.className = item.className + " spam";
+			// when tag matches, hide it.
+			item.className = item.className + ' isf-filtered';
 
 			// hide the object
-			item.style.position = "absolute";
+			// toggling visibility / display breaks image preview <a> tag's
+			item.style.position = 'absolute';
 			item.style.height = '0px';
 			item.style.width = '0px';
 
@@ -80,6 +83,20 @@ function notifyBackgroundPage(str) {
 
 
 
+//test settings support
 
+function onError(error) {
+	console.log(`Error: ${error}`);
+}
 
+function onGot(item) {
+	var pattern = "//";
+	if (item.pattern) {
+		pattern = item.pattern;
+	}
+	document.write(pattern);
+}
+
+var getting = browser.storage.local.get("pattern");
+getting.then(onGot, onError);
 

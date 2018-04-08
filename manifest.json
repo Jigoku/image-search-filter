@@ -7,31 +7,41 @@
 	"description": "Hides results hosted on spam websites from Google's image search",
 	"homepage_url": "https://github.com/Jigoku/image-search-filter",
 
-	"permissions": [
-		//none?
-  	],
+	"permissions": ["storage"],
+
+	"applications": {
+		"gecko": {
+			"id": "addon@example.com",
+			"strict_min_version": "42.0"
+		}
+	},
+	"options_ui": {
+		"page": "popup/isf.html",
+		"browser_style": true
+	},
 
 	"browser_action": {
 		"browser_style": true,
-		"default_icon": "icons/border-48.png",
+		"default_icon": "icons/isf-48.png",
 		"default_title": "Image Search Filter",
-		"default_popup": "popup/main.html"
+		"default_popup": "popup/isf.html"
 	},
 
+
 	"icons": {
-		"48": "icons/border-48.png"
+		"48": "icons/isf-48.png"
 	},
 
 	"content_scripts": [
 		{
 			"matches": [ "*://*/*" ],
 			"include_globs": ["*://*.google.*/search*&tbm=isch*"],
-			"js": ["filter.js"]
+			"js": ["main.js"]
 		}
 	],
 
 	"background": {
-		"scripts": ["background.js"]
+		"scripts": ["background.js", "popup/isf.js"]
 	}
 
 }

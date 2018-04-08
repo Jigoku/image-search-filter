@@ -5,4 +5,3 @@ function handleMessage(request) {
 }
 
 browser.runtime.onMessage.addListener(handleMessage);
-
