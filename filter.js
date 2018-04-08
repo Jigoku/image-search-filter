@@ -22,16 +22,10 @@
 
 */
 
-var count = 0;
-
-//remove spam on page load
-for (const item of document.querySelectorAll('div.rg_bx')) {
-	hidespam(item);
-}
+var total = 0;
 
 
-// create observer to remove new results (added on scrolling)
-//   mutation api notes https://developer.mozilla.org/en-US/docs/Web/API/Node
+// Callback function to execute when mutations are observed
 var observer = new MutationObserver(function(mutations) {
 	mutations.forEach(function(mutation) {
 		if (mutation.type === 'childList') {
@@ -39,40 +33,53 @@ var observer = new MutationObserver(function(mutations) {
 				hidespam(item);
 			}
 		}
-
-		//observer.disconnect();
 	});
+	//observer.disconnect();
 });
-var obconfig = { childList: true }
+var obconfig = { childList: true };
 
+// start an observer to listen for new nodes
 observer.observe(document.getElementById('rg_s'), obconfig);
 
 
+// remove initial results
+for (const item of document.querySelectorAll('div.rg_bx')) {
+	hidespam(item);
+}
 
-//hide spam results matching this regex
-function hidespam(node) {
-	if (/(.)?(pinterest\.(com|co\.uk)|pinimg\.com)/i.test(node.textContent)) {
-		node.style.height = '0px';
-		node.style.width = '0px';
-		node.textContent = "";
-		++count;
-		notifyBackgroundPage(count.toString());
+
+function hidespam(item) {
+	// hide spam from results
+
+	if (!(/spam/.test(item.className))) {
+		//console.log("found spam! " + total);
+		if (/(.)?(pinterest\.(com|co\.uk)|pinimg\.com)/i.test(item.textContent)) {
+
+			// tag matches, so we only count them once
+			item.className = item.className + " spam";
+
+			// hide the object
+			item.style.position = "absolute";
+			item.style.height = '0px';
+			item.style.width = '0px';
+
+			// increment badge counter
+			++total;
+			notifyBackgroundPage(total.toString());
+		}
 	}
 }
 
 
-function handleResponse(message) {
-	console.log(`Message from the background script:  ${message.response}`);
-}
-
-function handleError(error) {
- 	console.log(`Error: ${error}`);
-}
-
 function notifyBackgroundPage(str) {
+	// send string to badge counter
 	var sending = browser.runtime.sendMessage({
 		text: str
 	});
-	sending.then(handleResponse, handleError);
 }
+
+
+
+
+
 
