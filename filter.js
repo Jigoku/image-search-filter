@@ -22,25 +22,13 @@
 
 */
 
-var total = 0;
+var count = 0;
 
 //remove spam on page load
 for (const item of document.querySelectorAll('div.rg_bx')) {
 	hidespam(item);
 }
 
-
-//hide spam results matching this regex
-function hidespam(node) {
-	if (/(.)?(pinterest\.(com|co\.uk)|pinimg\.com)/i.test(node.textContent)) {
-		//console.log(node.textContent);
-		node.style.height = '0px';
-		node.style.width = '0px';
-		node.textContent = "";
-		total = total +1;
-		console.log(total+ " spam results removed");
-	}
-}
 
 // create observer to remove new results (added on scrolling)
 //   mutation api notes https://developer.mozilla.org/en-US/docs/Web/API/Node
@@ -58,3 +46,33 @@ var observer = new MutationObserver(function(mutations) {
 var obconfig = { childList: true }
 
 observer.observe(document.getElementById('rg_s'), obconfig);
+
+
+
+//hide spam results matching this regex
+function hidespam(node) {
+	if (/(.)?(pinterest\.(com|co\.uk)|pinimg\.com)/i.test(node.textContent)) {
+		node.style.height = '0px';
+		node.style.width = '0px';
+		node.textContent = "";
+		++count;
+		notifyBackgroundPage(count.toString());
+	}
+}
+
+
+function handleResponse(message) {
+	console.log(`Message from the background script:  ${message.response}`);
+}
+
+function handleError(error) {
+ 	console.log(`Error: ${error}`);
+}
+
+function notifyBackgroundPage(str) {
+	var sending = browser.runtime.sendMessage({
+		text: str
+	});
+	sending.then(handleResponse, handleError);
+}
+
