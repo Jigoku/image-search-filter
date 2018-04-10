@@ -16,7 +16,7 @@
 		}
 	},
 	"options_ui": {
-		"page": "popup/isf.html",
+		"page": "options.html",
 		"browser_style": true
 	},
 
@@ -24,7 +24,7 @@
 		"browser_style": true,
 		"default_icon": "icons/isf-48.png",
 		"default_title": "Image Search Filter",
-		"default_popup": "popup/isf.html"
+		"default_popup": "options.html"
 	},
 
 
@@ -41,7 +41,7 @@
 	],
 
 	"background": {
-		"scripts": ["background.js", "popup/isf.js"]
+		"scripts": ["background.js"]
 	}
 
 }

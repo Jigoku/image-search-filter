@@ -22,9 +22,15 @@
 
 */
 
+// TODO, div class tags are reset on window resize, so find
+// eventlistener that will rerun function hidespam() when resized
+//window.addEventListener('resize', test());
+
+
+// stores the total of filtered results
 var total = 0;
 
-// Callback function to execute when mutations are observed
+// callback function to execute when mutations are observed
 var observer = new MutationObserver(function(mutations) {
 	mutations.forEach(function(mutation) {
 		if (mutation.type === 'childList') {
@@ -33,35 +39,38 @@ var observer = new MutationObserver(function(mutations) {
 			}
 		}
 	});
-	//observer.disconnect();
 });
+
+// only check for new children added to parent node
 var obconfig = { childList: true };
 
 // start an observer to listen for new nodes
+// rg_s is the parent node of the inserted search result elements
 observer.observe(document.getElementById('rg_s'), obconfig);
 
 
-// remove initial results
+// remove initial results on first run
+// each result element has class rg_bx
 for (const item of document.querySelectorAll('div.rg_bx')) {
 	hidespam(item);
 }
 
-
-
 function hidespam(item) {
-	// hide spam from results
+	// hide unwanted spam from results
 
-	// check if className matches with "isf-filtered"
+	// check if we added className with "isf-filtered"
 	if (!(/isf-filtered/.test(item.className))) {
 
 		// check for matching spam sites
+		// TODO read "pattern" from  browser.storage.sync.get("pattern")
 		if (/(.)?(pinterest\.(com|co\.uk)|pinimg\.com)/i.test(item.textContent)) {
 
-			// when tag matches, hide it.
+			// when content matches, tag it so we don't count it multiple times
 			item.className = item.className + ' isf-filtered';
 
 			// hide the object
-			// toggling visibility / display breaks image preview <a> tag's
+			// toggling visibility or display breaks image preview <a> tag's
+			// so set to 0 pixels and move position
 			item.style.position = 'absolute';
 			item.style.height = '0px';
 			item.style.width = '0px';
@@ -74,8 +83,9 @@ function hidespam(item) {
 }
 
 
+// send string to badge counter
+// this lets us see how many elements were filtered by matching hidespam()
 function notifyBackgroundPage(str) {
-	// send string to badge counter
 	var sending = browser.runtime.sendMessage({
 		text: str
 	});
@@ -83,20 +93,21 @@ function notifyBackgroundPage(str) {
 
 
 
-//test settings support
-
+// test settings support
+// this doesn't do anything at all ?
+// see options.js
 function onError(error) {
 	console.log(`Error: ${error}`);
 }
 
 function onGot(item) {
-	var pattern = "//";
+	var pattern = "//i";
 	if (item.pattern) {
 		pattern = item.pattern;
 	}
-	document.write(pattern);
 }
 
-var getting = browser.storage.local.get("pattern");
+var getting = browser.storage.sync.get("pattern") || "test";
 getting.then(onGot, onError);
 
+// EOF
