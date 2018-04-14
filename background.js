@@ -2,6 +2,7 @@
 
 function handleMessage(request) {
 	browser.browserAction.setBadgeText({text: request.text });
+	browser.browserAction.setBadgeBackgroundColor({color: "#bb7722"})
 }
 
 browser.runtime.onMessage.addListener(handleMessage);
